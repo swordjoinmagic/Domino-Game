@@ -9,6 +9,8 @@ using UnityEngine.UI;
  */
 public class UIManagent : MonoBehaviour {
 
+    List<GameObject> gameObjects = new List<GameObject>();
+
     // 最大值250%，最小值1%
     public float maxScrollbar = 250f;
     public float minScrollbar = 1f;
@@ -16,9 +18,9 @@ public class UIManagent : MonoBehaviour {
     public float maxWeight = 2.5f;
     public float minWeight = 0.1f;
 
-    private float nowLength;  // 当前长度的scala x
-    private float nowWidth;   // 当前宽度的scala y
-    private float nowWeight;            // 当前重量
+    private float nowLength = 1f;  // 当前长度的scala x
+    private float nowWidth = 1f;   // 当前宽度的scala y
+    private float nowWeight = 1f;            // 当前重量
 
     public GameManage gameManage;       // 管理游戏日程的对象
 
@@ -57,6 +59,32 @@ public class UIManagent : MonoBehaviour {
     public GameObject GroupPanel;
     public GameObject DefineForYourSelfPanel;
 
+    //=======================================
+    // 生成多米诺骨牌的填充字段
+    //=======================================
+    public InputField inputFieldPositionX;
+    public InputField inputFieldPositionY;
+    public InputField inputFieldRotationX;
+    public InputField inputFieldRotationY;
+
+    // 多米诺骨牌群体生成时的增量
+    public InputField inputFieldGroupPositionX;
+    public InputField inputFieldGroupPositionY;
+    public InputField inputFieldGroupRotationX;
+    public InputField inputFieldGroupRotationY;
+    public InputField inputFieldPositionXAdditional;
+    public InputField inputFieldPositionYAdditional;
+    public InputField inputFieldRotationXAdditional;
+    public InputField inputFieldRotationYAdditional;
+
+    // 生成群体多米诺骨牌时的间隔单位
+    public InputField inputFieldPositionXInterval;
+    public InputField inputFieldPositionYInterval;
+    public InputField inputFieldRotationXInterval;
+    public InputField inputFieldRotationYInterval;
+
+    // 群体多米诺骨牌的长度
+    public InputField inputFieldGroupLength;
 
     public void Start() {
         modelRigidbody = model.GetComponent<Rigidbody>();
@@ -182,9 +210,80 @@ public class UIManagent : MonoBehaviour {
         SetPanelActive(DefineForYourSelfPanel);
     }
 
+    public void OnClickButtonClear() {
+        StopAllCoroutines();
+        foreach (GameObject gameobject in gameObjects) {
+            Destroy(gameobject);
+        }
+        gameObjects.Clear();
+    }
+
     // 生成单个多米诺骨牌
     public void CreateDominSingle() {
+        float positionX = CheckNumber(inputFieldPositionX.text,10000,-10000);
+        float positionY = CheckNumber(inputFieldPositionY.text, 10000, -10000);
+        float rotationX = CheckNumber(inputFieldRotationX.text, 10000, -10000);
+        float rotationY = CheckNumber(inputFieldRotationY.text, 10000, -10000);
 
+        Vector3 position = new Vector3(positionX, 1, positionY);
+        Quaternion rotation = Quaternion.Euler(rotationX, rotationY, 0);
+
+        GameObject domina = GameObject.Instantiate<GameObject>(model.gameObject,position,rotation);
+        domina.GetComponent<Rigidbody>().useGravity = true;
+        gameObjects.Add(domina);
     }
+
+    // 用于生成群体多米诺骨牌的协程
+    IEnumerator GroupDomina() {
+
+        // 获得长度
+        int length = (int)CheckNumber(inputFieldGroupLength.text,10000,1);
+
+        // 获得初始坐标
+        float initialPositionX = CheckNumber(inputFieldGroupPositionX.text, 10000, -10000);
+        float initialPositionY = CheckNumber(inputFieldGroupPositionY.text, 10000, -10000);
+        float initialRotationX = CheckNumber(inputFieldGroupRotationX.text, 10000, -10000);
+        float initialRotationY = CheckNumber(inputFieldGroupRotationY.text, 10000, -10000);
+
+        // 获得坐标增量
+        float additionalPositionX = CheckNumber(inputFieldPositionXAdditional.text, 10000, -10000);
+        float additionalPositionY = CheckNumber(inputFieldPositionYAdditional.text, 10000, -10000);
+        float additionalRotationX = CheckNumber(inputFieldRotationXAdditional.text, 10000, -10000);
+        float additionalRotationY = CheckNumber(inputFieldRotationYAdditional.text, 10000, -10000);
+
+        // 逐步生成多米诺骨牌
+        for (int i=0;i<length;i++) {
+            float nowPositionX = initialPositionX + additionalPositionX * i;
+            float nowPositionY = initialPositionY + additionalPositionY * i;
+            float nowRotationX = initialRotationX + additionalRotationX * i;
+            float nowRotationY = initialRotationY + additionalRotationY * i;
+
+
+            Vector3 nowPosition = new Vector3(nowPositionX,1,nowPositionY);
+            Quaternion quaternion = Quaternion.Euler(nowRotationX,nowRotationY,0);
+
+            GameObject domina = GameObject.Instantiate<GameObject>(model.gameObject,nowPosition,quaternion);
+            domina.GetComponent<Rigidbody>().useGravity = true;
+            domina.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
+
+            gameObjects.Add(domina);
+
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        yield return new WaitForSeconds(1);
+        // 生成完所有多米诺骨牌后，将他们的freeze取消
+        foreach (GameObject gameobject in gameObjects) {
+            if(gameObject != null)
+                gameobject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        }
+    }
+
+    // 生成多个多米诺骨牌,为了视觉效果，使用协程一个个生成
+    public void CreateDominaGroup() {
+        StopAllCoroutines();
+        StartCoroutine(GroupDomina());
+    }
+
 }
 
