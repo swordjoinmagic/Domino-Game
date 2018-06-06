@@ -59,10 +59,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Content\AnimaorTest.cs" />
+    <Compile Include="Assets\Script\AnimationsTest.cs" />
+    <Compile Include="Assets\Script\Camera\ExampleClass.cs" />
     <Compile Include="Assets\Script\Camera\MoveCamera.cs" />
     <Compile Include="Assets\Script\GameManage.cs" />
     <Compile Include="Assets\Script\Hide.cs" />
     <Compile Include="Assets\Script\Test.cs" />
+    <Compile Include="Assets\Script\TestCube.cs" />
     <Compile Include="Assets\Script\UIManagent.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/UnityInstance/Domino-Game/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>

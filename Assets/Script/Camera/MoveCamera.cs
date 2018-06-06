@@ -92,24 +92,25 @@ public class MoveCamera : MonoBehaviour {
         //===================================
         // 移动摄像头的x坐标和y坐标
         //===================================
-        if (x < leftLimit) {
+        if (x < leftLimit && x>=0) {
             camera.transform.Translate(leftStep * Time.deltaTime,Space.World);
             nowTexture2D = LeftArrow(texture2D);
         }
-        if (x > rightLimit) {
+        if (x > rightLimit && x<screenWidth) {
             camera.transform.Translate(rightStep * Time.deltaTime, Space.World);
             nowTexture2D = RightArrow(texture2D);
         }
-        if (y < downLimit) {
+        if (y < downLimit && y>=0) {
             camera.transform.Translate(downStep * Time.deltaTime, Space.World);
             nowTexture2D = DownArrow(texture2D);
         }
-        if (y > upLimit) {
+        if (y > upLimit && y<screenHeight) {
             camera.transform.Translate(upStep * Time.deltaTime, Space.World);
             nowTexture2D = UpArrow(texture2D);
         }
 
         try {
+            
             Cursor.SetCursor(nowTexture2D, Vector2.zero, CursorMode.Auto);
         } catch (Exception e) { }
 
