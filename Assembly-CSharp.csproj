@@ -66,8 +66,12 @@
     <Compile Include="Assets\Script\Animator\TitleAuto.cs" />
     <Compile Include="Assets\Script\Camera\ExampleClass.cs" />
     <Compile Include="Assets\Script\Camera\MoveCamera.cs" />
+    <Compile Include="Assets\Script\EggGameScript\CameraGameMove.cs" />
     <Compile Include="Assets\Script\EggGameScript\ChangeCenterMass.cs" />
     <Compile Include="Assets\Script\EggGameScript\CharacterGameMove.cs" />
+    <Compile Include="Assets\Script\EggGameScript\EnermyStatusMachineAI.cs" />
+    <Compile Include="Assets\Script\EggGameScript\OpenCloseDoor.cs" />
+    <Compile Include="Assets\Script\EggGameScript\tesst.cs" />
     <Compile Include="Assets\Script\GameManage.cs" />
     <Compile Include="Assets\Script\Hide.cs" />
     <Compile Include="Assets\Script\Test.cs" />
