@@ -149,7 +149,7 @@ public class TitleAuto : MonoBehaviour {
     // 控制小人全程动作的协程函数
     IEnumerator HumenAuto() {
         // 总而言之，先暂停五秒
-        //yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2.5f);
 
         for (int i=0;i<transforms.Count;i++) {
 

@@ -11,6 +11,11 @@ public class LaserSetup : MonoBehaviour {
     public ParticleSystem particle;
     public LineRenderer line;
     public Vector3 direction = new Vector3(0,0,1);
+    public GameMange gameMange;
+
+    private void Awake() {
+        gameMange = GameObject.FindWithTag("Player").GetComponent<GameMange>();
+    }
 
     public float LineRenderLength {
         get {
@@ -38,7 +43,7 @@ public class LaserSetup : MonoBehaviour {
         }
 
         if (IsPlayerInLaser()) {
-            Debug.Log("游戏角色死亡");
+            gameMange.IsGameOver = true;
         }
 
 	}

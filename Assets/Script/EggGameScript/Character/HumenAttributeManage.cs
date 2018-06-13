@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class HumenAttributeManage : MonoBehaviour {
     private bool isGetCube;
+    private DominaAttribute dominaModel;
     private GameObject cube;
     private Animator animator;
     public Transform leftHand;
@@ -27,6 +28,16 @@ public class HumenAttributeManage : MonoBehaviour {
 
         set {
             cube = value;
+        }
+    }
+
+    public DominaAttribute DominaModel {
+        get {
+            return dominaModel;
+        }
+
+        set {
+            dominaModel = value;
         }
     }
 

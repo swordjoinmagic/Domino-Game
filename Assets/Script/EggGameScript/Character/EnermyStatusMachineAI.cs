@@ -15,7 +15,8 @@ public class EnermyStatusMachineAI : MonoBehaviour {
     private NavMeshAgent agent;
     public Transform player;
     public float canWatchMaxAngle = 110f;      // FOV角度，守卫可以观察到的最大角度
-    private SphereCollider collider; 
+    private SphereCollider collider;
+    public GameMange gameManage;
 
     //====================================
     // 基本设置
@@ -81,12 +82,16 @@ public class EnermyStatusMachineAI : MonoBehaviour {
                 if (agent.remainingDistance-1 < agent.stoppingDistance) {
                     waitSeconds = 0f;
                     //Debug.Log("巡逻到达终点");
+                    agent.speed = 3.0f;
                     status = Status.IDLE;
                 }
                 // 巡逻 -> 追击
-                if (isFindPlayer) {
+                if (isFindPlayer && !gameManage.IsGameOver) {
                     Debug.Log("发现敌人");
                     nextPosition = player.position;
+
+                    waitSeconds = 0f;
+                    agent.speed = 5f;
                     status = Status.MoveAttack;
                 }
                 break;
@@ -94,21 +99,33 @@ public class EnermyStatusMachineAI : MonoBehaviour {
                 // 处于追击状态时
 
                 // 处理追击状态时执行的行动
-                //agent.isStopped = false;
-                //agent.SetDestination(nextPosition);
+                agent.isStopped = false;
+                agent.SetDestination(player.position);
 
+                // 追击2s，如果超过两秒，自动转为IDLE
+                waitSeconds += Time.deltaTime;
 
                 // 处理状态转移
 
-                if (Vector3.Distance(player.position,transform.position)<=3f) {
+                if (Vector3.Distance(player.position,transform.position)<=1.5f) {
+                    waitSeconds = 0f;
                     status = Status.Attack;
+                    break;
+                }
+
+                if (waitSeconds >= 0.7f) {
+                    Debug.Log("追击超过了1秒钟");
+                    waitSeconds = 0f;
+                    status = Status.IDLE;
+                    break;
                 }
 
                 // 追击 -> 攻击,追击 -> IDLE
-                if (agent.remainingDistance-attackDistance < agent.stoppingDistance) {
-                    if (isFindPlayer)
+                if (agent.remainingDistance < agent.stoppingDistance) {
+                    if (isFindPlayer) {
+                        waitSeconds = 0f;
                         status = Status.Attack;
-                    else {
+                    } else {
                         waitSeconds = 0f;
                         status = Status.IDLE;
                     }
@@ -119,6 +136,19 @@ public class EnermyStatusMachineAI : MonoBehaviour {
                 // 处于攻击状态时
 
                 // 处理攻击状态时执行的行动
+
+                if (!gameManage.IsGameOver) {
+                    gameManage.IsGameOver = true;
+                }
+
+                //waitSeconds += Time.deltaTime;
+
+                //if (waitSeconds >= 0.5f) {
+                //waitSeconds = 0f;
+                agent.isStopped = true;
+                agent.speed = 3.0f;
+                status = Status.IDLE;
+                //}
 
                 // 显示攻击动画
 
@@ -131,6 +161,9 @@ public class EnermyStatusMachineAI : MonoBehaviour {
                 // 处理IDLE状态时执行的行动
                 //Debug.Log("开始等待,waitSeconds:"+waitSeconds);
                 // 等待2s
+
+                animator.SetFloat("speed",0.1f);
+
                 waitSeconds += Time.deltaTime;
                 //Debug.Log("当前等待时间:"+waitSeconds);
                 // 身体四处摇摆
@@ -157,16 +190,20 @@ public class EnermyStatusMachineAI : MonoBehaviour {
                     agent.isStopped = false;
                     agent.SetDestination(nextPosition);
 
+                    animator.SetFloat("speed", 0.1f);
+                    agent.speed = 3.0f;
                     status = Status.Patrol;
-                    break;
                 }
 
                 // IDLE -> 追击
-                if (isFindPlayer) {
+                if (isFindPlayer && !gameManage.IsGameOver) {
                     nextPosition = player.position;
                     agent.isStopped = false;
                     agent.SetDestination(nextPosition);
-                    
+
+                    waitSeconds = 0f;
+                    agent.speed = 5f;
+                    animator.SetFloat("speed", 0.6f);
                     status = Status.MoveAttack;
                 }
 
