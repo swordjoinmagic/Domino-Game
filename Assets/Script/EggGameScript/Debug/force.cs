@@ -6,9 +6,11 @@ public class force : MonoBehaviour {
 
     Rigidbody _rigidbody;
 
+    public Vector3 _force = new Vector3(1000, 0, 0);
+
 	// Use this for initialization
 	void Start () {
         _rigidbody = GetComponent<Rigidbody>();
-        _rigidbody.AddForce(new Vector3(0,0,500) );
+        _rigidbody.AddForce(_force);
 	}
 }

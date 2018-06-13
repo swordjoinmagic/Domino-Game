@@ -7,6 +7,11 @@ public class AnimationsMangemetn : MonoBehaviour {
     private bool isShowDescribe = false;
     private bool isShowSpeicalDescribe = false;
 
+    public Animation nameAnimation;
+    public Animation describeAnimation;
+    public Animation tipsAnimation;
+    public Animation specialDescribeAnimation;
+
     public bool IsShowNameAndTips {
         get {
             return isShowNameAndTips;
@@ -59,8 +64,4 @@ public class AnimationsMangemetn : MonoBehaviour {
         }
     }
 
-    public Animation nameAnimation;
-    public Animation describeAnimation;
-    public Animation tipsAnimation;
-    public Animation specialDescribeAnimation;
 }

@@ -55,11 +55,11 @@ public class Controller : MonoBehaviour {
     }
 
     private void OnDisable() {
-        if(animations.IsShowNameAndTips)
+        if(animations.nameAnimation && animations.tipsAnimation && animations.IsShowNameAndTips)
             animations.IsShowNameAndTips = false;
-        if (animations.IsShowDescribe)
+        if (animations.describeAnimation && animations.IsShowDescribe)
             animations.IsShowDescribe = false;
-        if (animations.IsShowSpeicalDescribe)
+        if (animations.specialDescribeAnimation && animations.IsShowSpeicalDescribe)
             animations.IsShowSpeicalDescribe = false;
     }
 }
