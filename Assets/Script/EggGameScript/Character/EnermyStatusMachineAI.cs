@@ -35,10 +35,10 @@ public class EnermyStatusMachineAI : MonoBehaviour {
     private float waitSeconds = 0;
 
     // 状态
-    enum Status { IDLE,Patrol,MoveAttack,Attack };
+    public enum Status { IDLE,Patrol,MoveAttack,Attack };
 
     // 当前状态
-    Status status = Status.IDLE;        // 默认状态，无所事事
+    public Status status = Status.IDLE;        // 默认状态，无所事事
 
     private void Awake() {
         animator = GetComponent<Animator>();
@@ -113,7 +113,7 @@ public class EnermyStatusMachineAI : MonoBehaviour {
                     break;
                 }
 
-                if (waitSeconds >= 0.7f) {
+                if (waitSeconds >= 1f) {
                     Debug.Log("追击超过了1秒钟");
                     waitSeconds = 0f;
                     status = Status.IDLE;

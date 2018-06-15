@@ -9,6 +9,8 @@ public class GameMange : MonoBehaviour {
     private Animator animator;
     private bool isGameOver = false;
 
+    public int gameOverCount = 0;
+
     public bool IsGameOver {
         get {
             return isGameOver;
@@ -16,6 +18,11 @@ public class GameMange : MonoBehaviour {
 
         set {
             isGameOver = value;
+
+            if (isGameOver) {
+                gameOverCount += 1;
+            }
+
         }
     }
 

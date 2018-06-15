@@ -18,8 +18,10 @@ public class PlaceDomina : MonoBehaviour {
     private GameObject domina;       // 真正要放置的多米诺骨牌
     public DominaAttribute dominaAttribute;     // 多米诺骨牌的属性
     private Vector3 nowTransform; // 鼠标点击放置多米诺骨牌的地方
-    private Quaternion nowRotation; // 当前旋转
+    private Quaternion nowRotation = Quaternion.identity; // 当前旋转
     private HumenAttributeManage humenAttribute;
+
+    private ExtraMessageView extraView;
 
     private bool ifCollider = false;
     private bool ifPreparePlace = false;        // 是否准备好要放置多米诺骨牌
@@ -48,7 +50,7 @@ public class PlaceDomina : MonoBehaviour {
         nowTransform = dominaModel.position;
         nowRotation = dominaModel.rotation;
         humenAttribute = GameObject.FindWithTag("Player").GetComponent<HumenAttributeManage>();
-        
+        extraView = GameObject.Find("ViewManagment").GetComponent<ExtraMessageView>();
     }
 
     // Update is called once per frame
@@ -86,12 +88,18 @@ public class PlaceDomina : MonoBehaviour {
 
                 if (Input.GetButtonDown("Fire1")) {
 
-                    domina = humenAttribute.Cube;
-                    GameObject cube = GameObject.Instantiate<GameObject>(domina,nowTransform,nowRotation);
-                    cube.SetActive(true);
-                    humenAttribute.IsGetCube = false;
-                    IfPreparePlace = false;
-                    dominaModel.position = originPositionModel;
+                    if (Vector3.Distance(hit.point, transform.position) > 3f) {
+                        extraView.ShowExtraMessage("目标地点距离角色太远了!请走进一点再放置多米诺骨牌");
+                    } else {
+                        domina = humenAttribute.Cube;
+                        //GameObject cube = GameObject.Instantiate<GameObject>(domina, nowTransform, nowRotation);
+                        //domina.SetActive(true);
+                        domina.transform.position = nowTransform;
+                        domina.transform.rotation = nowRotation;
+                        humenAttribute.IsGetCube = false;
+                        IfPreparePlace = false;
+                        dominaModel.position = originPositionModel;
+                    }
                 }
             }
         }

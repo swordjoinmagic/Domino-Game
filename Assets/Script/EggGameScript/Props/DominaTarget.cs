@@ -8,47 +8,67 @@ public class DominaTarget : MonoBehaviour {
     PlaceDomina placeDomina;
     HumenAttributeManage humenAttribute;
     DominaAttribute domina;
-    Animation errorOrSuccessMessage;
-    Text text;
+    ExtraMessageView view;
+    Rigidbody rigidbody;
 
-    bool isTips = false;        // 是否给出提示
-    float timeDelta = 0f;
+    Transform player;
+
+    public float forcePower;
+
+    bool isFindPlayer = false;
+
 
     private void Awake() {
         domina = GetComponent<DominaAttribute>();
         humenAttribute = GameObject.FindWithTag("Player").GetComponent<HumenAttributeManage>();
-        errorOrSuccessMessage = GameObject.Find("ErrorOrSuccessMessage").GetComponent<Animation>();
-        text = GameObject.Find("ErrorOrSuccessMessage").GetComponentInChildren<Text>();
         placeDomina = GameObject.FindWithTag("Player").GetComponent<PlaceDomina>();
+        view = GameObject.Find("ViewManagment").GetComponent<ExtraMessageView>();
+        rigidbody = GetComponent<Rigidbody>();
+        player = GameObject.FindWithTag("Player").GetComponent<Transform>();
     }
 
     public void DominaTargetGet() {
-        if (!humenAttribute.IsGetCube) {
-            humenAttribute.IsGetCube = true;
-            humenAttribute.DominaModel = domina;
-            humenAttribute.Cube = gameObject;
-            placeDomina.IfPreparePlace = true;
-            gameObject.SetActive(false);
-        } else {
-            isTips = true;
-            text.text = "你没有空余的手来拿物品了~~~";
-            errorOrSuccessMessage.Play("Fadein");
-        }
-    }
-
-    private void Update() {
-        if (isTips) {
-            timeDelta += Time.deltaTime;
-            if (timeDelta >= 2f) {
-                errorOrSuccessMessage.Play("FadeOut");
-                isTips = false;
-                timeDelta = 0f;
+        if (Input.GetKeyDown(KeyCode.G) && isFindPlayer) {
+            if (!humenAttribute.IsGetCube) {
+                humenAttribute.IsGetCube = true;
+                humenAttribute.DominaModel = domina;
+                humenAttribute.Cube = gameObject;
+                placeDomina.IfPreparePlace = true;
+                //gameObject.SetActive(false);
+                gameObject.transform.position = new Vector3(0, -10, 0);
+                isFindPlayer = false;
+            } else {
+                view.ShowExtraMessage("你没有空余的手用来拿物品了~~");
             }
         }
     }
 
-    private void OnDisable() {
-        if(isTips)
-            errorOrSuccessMessage.Play("FadeOut");
+    // 给多米诺骨牌生成推力
+    public void Push() {
+        //Debug.Log("当前距离为是:"+ Vector3.Distance(transform.position, player.position));
+        if (Input.GetKeyDown(KeyCode.F) && isFindPlayer) {
+            Debug.Log("按下F键");
+            Vector3 force = player.rotation * (new Vector3(0, 0, 1) * forcePower);
+            rigidbody.AddForce(force);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Player")) {
+            isFindPlayer = true;
+        }
+    }
+    private void OnTriggerStay(Collider other) {
+        if (other.CompareTag("Player")) {
+            isFindPlayer = true;
+        } else {
+            isFindPlayer = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other) {
+        if (other.CompareTag("Player")) {
+            isFindPlayer = false;
+        }
     }
 }

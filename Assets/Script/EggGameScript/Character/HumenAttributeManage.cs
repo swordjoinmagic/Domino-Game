@@ -10,6 +10,8 @@ public class HumenAttributeManage : MonoBehaviour {
     public Transform leftHand;
     public Transform rightHand;
     public GameObject model;
+    private bool IsGetKey1 = false;
+    private bool IsGetKey2 = false;
 
     public bool IsGetCube {
         get {
@@ -38,6 +40,26 @@ public class HumenAttributeManage : MonoBehaviour {
 
         set {
             dominaModel = value;
+        }
+    }
+
+    public bool IsGetKey11 {
+        get {
+            return IsGetKey1;
+        }
+
+        set {
+            IsGetKey1 = value;
+        }
+    }
+
+    public bool IsGetKey21 {
+        get {
+            return IsGetKey2;
+        }
+
+        set {
+            IsGetKey2 = value;
         }
     }
 

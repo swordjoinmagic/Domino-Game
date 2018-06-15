@@ -9,6 +9,9 @@ public class Controller : MonoBehaviour {
     AnimationsMangemetn animations;
     private KeyCode commentKeyCode = KeyCode.Q;
     public KeyCode speicalKeyCode = KeyCode.Space;
+
+    public bool isManySpecialKey = false;       // 是否有多个特殊按键
+
     public bool isAutoShowDescribe = true;
 
     public UnityEvent SpecialKeyEvent;
@@ -39,7 +42,7 @@ public class Controller : MonoBehaviour {
             animations.IsShowDescribe = true;
         }
 
-        if (speicalKeyCode != KeyCode.Space && Input.GetKeyDown(speicalKeyCode)) {
+        if ((speicalKeyCode != KeyCode.Space && Input.GetKeyDown(speicalKeyCode)) || isManySpecialKey) {
             SpecialKeyEvent.Invoke();
         }
     }

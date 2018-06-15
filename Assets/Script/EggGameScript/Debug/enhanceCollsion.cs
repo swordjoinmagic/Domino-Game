@@ -11,7 +11,9 @@ public class enhanceCollsion : MonoBehaviour {
     }
 
     private void OnCollisionEnter(Collision collision) {
-        Vector3 vector = transform.rotation * new Vector3(0, 0, 100);
-        _rigidbody.AddForce(vector);
+        if (collision.collider.CompareTag("Domina")) {
+            Vector3 vector = transform.rotation * new Vector3(0, 0, 100);
+            _rigidbody.AddForce(vector);
+        }
     }
 }
